@@ -1,4 +1,4 @@
-package com.market.marketplace.model;
+package com.market.marketplace.models;
 
 import javax.persistence.*;
 import java.io.Serializable;

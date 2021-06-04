@@ -1,7 +1,6 @@
-package com.market.marketplace.repo;
+package com.market.marketplace.repositories;
 
-import com.market.marketplace.model.Comment;
-import com.market.marketplace.model.User;
+import com.market.marketplace.models.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,9 +1,9 @@
-package com.market.marketplace;
+package com.market.marketplace.controllers;
 
-import com.market.marketplace.model.Comment;
-import com.market.marketplace.model.Product;
-import com.market.marketplace.service.CommentService;
-import com.market.marketplace.service.ProductService;
+import com.market.marketplace.models.Comment;
+import com.market.marketplace.models.Product;
+import com.market.marketplace.services.CommentService;
+import com.market.marketplace.services.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

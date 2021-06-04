@@ -1,4 +1,4 @@
-package com.market.marketplace.model;
+package com.market.marketplace.models;
 
 public class Login_info {
     private String login;
