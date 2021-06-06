@@ -1,8 +1,7 @@
-package com.market.marketplace.service;
+package com.market.marketplace.services;
 
-import com.market.marketplace.model.Comment;
-import com.market.marketplace.repo.CommentRepo;
-import com.market.marketplace.repo.ProductRepo;
+import com.market.marketplace.models.Comment;
+import com.market.marketplace.repositories.CommentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

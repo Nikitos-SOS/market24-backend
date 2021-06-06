@@ -1,4 +1,4 @@
-package com.market.marketplace.exception;
+package com.market.marketplace.exceptions;
 
 public class UserNotFoundException extends RuntimeException{
 

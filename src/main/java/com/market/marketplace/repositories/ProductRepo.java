@@ -1,6 +1,6 @@
-package com.market.marketplace.repo;
+package com.market.marketplace.repositories;
 
-import com.market.marketplace.model.Product;
+import com.market.marketplace.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -1,13 +1,12 @@
-package com.market.marketplace.service;
+package com.market.marketplace.services;
 
-import com.market.marketplace.exception.ProductNotFoundException;
-import com.market.marketplace.model.Product;
-import com.market.marketplace.repo.ProductRepo;
+import com.market.marketplace.exceptions.ProductNotFoundException;
+import com.market.marketplace.models.Product;
+import com.market.marketplace.repositories.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProductService {
