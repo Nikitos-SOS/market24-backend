@@ -37,11 +37,16 @@ public class JwtUtil {
     }
 
     public String generateToken(UserDetails userDetails){
+//        Set claims into jwt
         Map<String, Object> claims = new HashMap<>();
+//        Set role node in jwt
+        claims.put("role",userDetails.getAuthorities());
+//        Create token
         return createToken(claims,userDetails.getUsername());
     }
 
     private String createToken(Map<String,Object> claims, String subject){
+//        JWT builder
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()*1000*60*60*10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();

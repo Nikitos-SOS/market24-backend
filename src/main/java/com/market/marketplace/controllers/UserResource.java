@@ -22,4 +22,8 @@ public class UserResource {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/getAll")
+    public ResponseEntity<List<MyUser>> getAllUsers(){
+        return new ResponseEntity<>(userService.findAll(),HttpStatus.OK);
+    }
 }

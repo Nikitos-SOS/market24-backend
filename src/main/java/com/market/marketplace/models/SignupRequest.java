@@ -4,25 +4,25 @@ import java.util.Set;
 
 public class SignupRequest {
 
-    private String username;
+    private String userName;
     private Set<String> role;
     private String password;
 
     public SignupRequest() {
     }
 
-    public SignupRequest(String username,String password, Set<String> role) {
-        this.username = username;
+    public SignupRequest(String userName,String password, Set<String> role) {
+        this.userName = userName;
         this.role = role;
         this.password = password;
     }
 
     public String getUsername() {
-        return username;
+        return userName;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public String getPassword() {
