@@ -17,26 +17,43 @@ public class MyUserDetails implements UserDetails {
 
     private String username;
 
+    private String name;
+    private String surname;
+    private String email;
+    private String phone;
+
+
+    public MyUserDetails(Long id, String username, String name, String surname, String email, String phone, String password, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
     @JsonIgnore
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public MyUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
-    }
+
 
     public static MyUserDetails build(MyUser user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
+        System.out.println(authorities);
+//Long id, String username, String name, String surname, String email, String phone, String password, Collection<? extends GrantedAuthority> authorities
         return new MyUserDetails(
                 user.getId(),
                 user.getUsername(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getPhone(),
                 user.getPassword(),
                 authorities);
     }
@@ -84,5 +101,35 @@ public class MyUserDetails implements UserDetails {
             return false;
         MyUserDetails user = (MyUserDetails) o;
         return Objects.equals(id, user.id);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    @Override
+    public String toString() {
+        return "MyUserDetails{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", authorities=" + authorities +
+                '}';
     }
 }

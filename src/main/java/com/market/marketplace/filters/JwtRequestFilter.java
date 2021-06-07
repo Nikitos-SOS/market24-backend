@@ -1,6 +1,7 @@
 package com.market.marketplace.filters;
 
 
+import com.market.marketplace.models.MyUserDetails;
 import com.market.marketplace.services.MyUserDetailsService;
 import com.market.marketplace.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication()==null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            MyUserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if(jwtUtil.validateToken(jwt,userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
