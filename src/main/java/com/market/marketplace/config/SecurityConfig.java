@@ -3,8 +3,10 @@ package com.market.marketplace.config;
 
 import com.market.marketplace.filters.JwtRequestFilter;
 import com.market.marketplace.services.MyUserDetailsService;
+import com.market.marketplace.services.SellerDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,9 +18,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyUserDetailsService myUserDetailsService;
+
+    @Autowired
+    private SellerDetailsService sellerDetailsService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
@@ -26,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(myUserDetailsService);
+        auth.userDetailsService(sellerDetailsService);
     }
 
 
@@ -42,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
-//                .antMatchers("/user/**").permitAll()
+                .antMatchers("/seller_signup").permitAll()
+                .antMatchers("/seller_login").permitAll()
                 .antMatchers("/product/**").permitAll()
                 .anyRequest()
                 .authenticated()
@@ -63,3 +71,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 }
+

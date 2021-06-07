@@ -5,7 +5,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Seller")
-public class Seller implements User{
+public class Seller {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -13,6 +13,7 @@ public class Seller implements User{
     private Long INN;
     private String username;
     private String password;
+    private String contactInfo;
     @OneToMany(mappedBy = "seller")
     private Set<Product> products;
 
@@ -22,6 +23,14 @@ public class Seller implements User{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     public Long getINN() {

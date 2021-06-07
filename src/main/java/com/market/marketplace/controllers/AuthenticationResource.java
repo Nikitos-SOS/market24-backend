@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +69,15 @@ public class AuthenticationResource {
             throw new Exception("Incorrect username or password!", e);
         }
         final MyUserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        final String jwtToken = jwtTokenUtil.generateToken(userDetails);
+//        Setup claims
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities());
+        claims.put("name",userDetails.getName());
+        claims.put("surname",userDetails.getSurname());
+        claims.put("email",userDetails.getEmail());
+        claims.put("phone",userDetails.getPhone());
+
+        final String jwtToken = jwtTokenUtil.generateToken(userDetails,claims);
         final AuthenticationResponse response = new AuthenticationResponse(jwtToken);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
 

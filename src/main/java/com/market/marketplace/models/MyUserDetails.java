@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -22,7 +23,6 @@ public class MyUserDetails implements UserDetails {
     private String email;
     private String phone;
 
-
     public MyUserDetails(Long id, String username, String name, String surname, String email, String phone, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
@@ -30,6 +30,8 @@ public class MyUserDetails implements UserDetails {
         this.surname = surname;
         this.email = email;
         this.phone = phone;
+
+
         this.password = password;
         this.authorities = authorities;
     }
