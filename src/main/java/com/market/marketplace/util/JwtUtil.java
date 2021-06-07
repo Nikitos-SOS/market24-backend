@@ -36,11 +36,11 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails, HashMap<String,Object> claims){
 //        Set claims into jwt
-        Map<String, Object> claims = new HashMap<>();
+//        Map<String, Object> claims = new HashMap<>();
 //        Set role node in jwt
-        claims.put("role",userDetails.getAuthorities());
+//        claims.put("role",userDetails.getAuthorities());
 //        Create token
         return createToken(claims,userDetails.getUsername());
     }

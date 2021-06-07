@@ -1,14 +1,12 @@
 package com.market.marketplace.models;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "Users")
-public class MyUser implements User{
+public class MyUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
