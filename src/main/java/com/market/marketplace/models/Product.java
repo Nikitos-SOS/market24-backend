@@ -18,6 +18,12 @@ public class Product implements Serializable {
     private String description;
     private float rating;
 
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+    private Seller seller;
+
+
+
     public float getRating() {
         return rating;
     }
@@ -25,9 +31,6 @@ public class Product implements Serializable {
     public void setRating(float rating) {
         this.rating = rating;
     }
-
-
-
 
     public Product() {
     }

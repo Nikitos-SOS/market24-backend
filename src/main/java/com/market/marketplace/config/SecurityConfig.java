@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(myUserDetailsService);
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 //        http.authorizeRequests()
@@ -40,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
-                .antMatchers("/user/**").permitAll()
+//                .antMatchers("/user/**").permitAll()
                 .antMatchers("/product/**").permitAll()
                 .anyRequest()
                 .authenticated()
