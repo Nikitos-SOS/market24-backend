@@ -10,4 +10,5 @@ public interface SellerRepo extends JpaRepository<Seller, Integer> {
     Optional<Seller> findSellerByUsername(String username);
 
     Boolean existsByUsername(String username);
+    void deleteSellerById(Long id);
 }

@@ -1,71 +1,49 @@
 package com.market.marketplace.controllers;
 
-import com.market.marketplace.models.AuthenticationRequest;
-import com.market.marketplace.models.AuthenticationResponse;
 import com.market.marketplace.models.Seller;
-import com.market.marketplace.models.SellerDetails;
-import com.market.marketplace.services.SellerDetailsService;
 import com.market.marketplace.services.SellerService;
-import com.market.marketplace.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "htpp://localhost:4200")
+@RequestMapping("/seller")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SellerResource {
-    @Autowired
-    private SellerDetailsService sellerDetailsService;
+
     @Autowired
     private SellerService sellerService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtUtil jwtTokenUtil;
-    @Autowired
-    private PasswordEncoder encoder;
 
-    @PostMapping("/seller_signup")
-    public ResponseEntity<?> signup(@RequestBody Seller seller){
-        if(sellerService.existByName(seller.getUsername())){
-            return ResponseEntity.badRequest().body("Error: Username is already taken.");
-        }
-        seller.setPassword(encoder.encode(seller.getPassword()));
-        sellerService.addSeller(seller);
-        return new ResponseEntity<>("User successfully created!", HttpStatus.CREATED);
+    @PutMapping("/update")
+    @Transactional
+    public ResponseEntity<?> updateSeller(@RequestBody Seller seller){
+        System.out.println(seller.getUsername()+" "+seller.getINN()+" ");
+        Seller tempSeller = sellerService.findSellerByUsername(seller.getUsername());
+        seller.setProducts(tempSeller.getProducts());
+        Seller updateSeller = sellerService.updateSeller(seller);
+
+        return new ResponseEntity<>(updateSeller, HttpStatus.OK);
     }
 
-    @PostMapping("/seller_login")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest seller)throws Exception{
+    @GetMapping("/all")
+    public ResponseEntity<List<Seller>> getAllSellers(){
+        return new ResponseEntity<>(sellerService.findAll(), HttpStatus.OK);
+    }
 
-        System.out.println(seller.getUsername() + seller.getPassword());
+    @DeleteMapping("/delete/{id}")
+    @Transactional
+    public ResponseEntity<?> deleteSeller(@PathVariable Long id){
+        sellerService.deleteSeller(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
-        try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(seller.getUsername(),seller.getPassword())
-            );
-        }catch (BadCredentialsException e){
-            throw new Exception("Incorrect username or password!", e);
-        }
-
-        final SellerDetails sellerDetails = sellerDetailsService.loadUserByUsername(seller.getUsername());
-        HashMap<String, Object> claims = new HashMap<>();
-        claims.put("contactInfo",sellerDetails.getContactInfo());
-        claims.put("inn", sellerDetails.getINN());
-        claims.put("role", sellerDetails.getAuthorities());
-        final String jwtToken = jwtTokenUtil.generateToken(sellerDetails,claims);
-        final AuthenticationResponse response = new AuthenticationResponse(jwtToken);
-        return new ResponseEntity<>(response,HttpStatus.CREATED);
-
+    @GetMapping("/find/{username}")
+    public ResponseEntity<Seller> getSellerByUsername(@PathVariable String username){
+        Seller seller = sellerService.findSellerByUsername(username);
+        return new ResponseEntity<>(seller,HttpStatus.OK);
     }
 }

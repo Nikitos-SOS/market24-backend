@@ -3,6 +3,7 @@ package com.market.marketplace.services;
 
 import com.market.marketplace.models.MyUser;
 import com.market.marketplace.repositories.UserRepo;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +23,22 @@ public class UserService{
         return userRepo.findAll();
     }
 
+    public MyUser updateUser(MyUser user){
+        return userRepo.save(user);
+    }
+
     public Boolean existByName(String username){
         return userRepo.existsByUsername(username);
+    }
+
+    public void deleteUser(Long id){
+        userRepo.deleteUserById(id);
+    }
+
+    public MyUser findUserByUsername(String username){
+        return userRepo.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
     }
 
 }

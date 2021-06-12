@@ -114,8 +114,9 @@ public class AuthenticationResource {
         user.setPhone(signupRequest.getPhone());
 
 
-        Set<String> strRoles = signupRequest.getRole();
+        Set<String> strRoles = signupRequest.getRoles();
         Set<Role> roles = new HashSet<>();
+        System.out.println(strRoles);
         if (strRoles == null) {
             Role userRole = roleRepo.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
