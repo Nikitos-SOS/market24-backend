@@ -2,8 +2,10 @@ package com.market.marketplace.controllers;
 
 import com.market.marketplace.models.ERole;
 import com.market.marketplace.models.MyUser;
+import com.market.marketplace.models.Product;
 import com.market.marketplace.models.Role;
 import com.market.marketplace.services.MyUserDetailsService;
+import com.market.marketplace.services.ProductService;
 import com.market.marketplace.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,8 @@ public class UserResource {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/all")
 
@@ -53,6 +57,29 @@ public class UserResource {
 //        MyUser user = userDetailsService.loadUserByUsername(username);
         MyUser user = userService.findUserByUsername(username);
         return new ResponseEntity<>(user,HttpStatus.OK);
+    }
+
+    @GetMapping("/like/{productId}:{userId}")
+    public ResponseEntity<MyUser> likeProduct(@PathVariable("productId") Long productId, @PathVariable("userId")Long userId){
+        MyUser user = userService.findUserById(userId);
+        List<Product> products = user.getProducts();
+        if (products.contains(productService.findProductById(productId))){
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        products.add(productService.findProductById(productId));
+        user.setProducts(products);
+        userService.updateUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/dislike/{productId}:{userId}")
+    public ResponseEntity<MyUser> dislikeProduct(@PathVariable("productId") Long productId, @PathVariable("userId")Long userId){
+        MyUser user = userService.findUserById(userId);
+        List<Product> products = user.getProducts();
+        products.remove(productService.findProductById(productId));
+        user.setProducts(products);
+        userService.updateUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 }
