@@ -2,20 +2,29 @@ package com.market.marketplace.controllers;
 
 import com.market.marketplace.models.Comment;
 import com.market.marketplace.models.Product;
+import com.market.marketplace.models.ProductRequest;
+import com.market.marketplace.repositories.SellerRepo;
 import com.market.marketplace.services.CommentService;
 import com.market.marketplace.services.ProductService;
+import com.market.marketplace.services.SellerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/product")
 public class ProductResource {
     private final ProductService productService;
     private final CommentService commentService;
+
+    @Autowired
+    private SellerService sellerService;
 
 
     public ProductResource(ProductService productService, CommentService commentService) {
@@ -30,6 +39,8 @@ public class ProductResource {
         List<Product> products = productService.findAllProducts();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+
     @GetMapping("/find/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
@@ -38,14 +49,49 @@ public class ProductResource {
     }
     @PostMapping("/add")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Product> addProduct(@RequestBody Product product){
-        Product newProduct = productService.addProduct(product);
+    public ResponseEntity<?> addProduct(@RequestBody ProductRequest product){
+        Product newProduct  = new Product();
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setCount(product.getCount());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setImgUrl(product.getImgUrl());
+        newProduct.setRating(5);
+        newProduct.setCity(product.getCity());
+        newProduct.setRegion(product.getRegion());
+        try{
+            newProduct.setSeller(sellerService.findSellerById(product.getSeller()));
+
+        }catch (Exception e){
+            return new ResponseEntity<>("Seller not found!", HttpStatus.BAD_REQUEST);
+        }
+
+        productService.addProduct(newProduct);
         return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
     }
     @PutMapping("/update")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Product> updateProduct(@RequestBody Product product){
-        Product updateProduct = productService.updateProduct(product);
+    public ResponseEntity<?> updateProduct(@RequestBody ProductRequest product){
+        Product newProduct  = new Product();
+        newProduct.setId(product.getId());
+        newProduct.setName(product.getName());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setCount(product.getCount());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setImgUrl(product.getImgUrl());
+        newProduct.setRating(5);
+        newProduct.setCity(product.getCity());
+        newProduct.setRegion(product.getRegion());
+        try{
+            newProduct.setSeller(sellerService.findSellerById(product.getSeller()));
+
+        }catch (Exception e){
+            return new ResponseEntity<>("Seller not found!", HttpStatus.BAD_REQUEST);
+        }
+
+//        productService.addProduct(newProduct);
+//        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+        Product updateProduct = productService.updateProduct(newProduct);
         return new ResponseEntity<>(updateProduct, HttpStatus.OK);
     }
     @Transactional
@@ -55,6 +101,14 @@ public class ProductResource {
         System.out.println(id);
         productService.deleteProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/find/seller_username/{username}")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<List<Product>> findProductBySellerId(@PathVariable("username") String username){
+        List<Product> products = productService.findProductByUsername(username);
+//        System.out.println(products);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
 //    @GetMapping("/comments/{id}")
@@ -88,30 +142,5 @@ public class ProductResource {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-//    @RestController
-//    @RequestMapping("/comments")
-//    public static class CommentResource {
-//        private final CommentService commentService;
-//
-//        public CommentResource(CommentService commentService) {
-//            this.commentService = commentService;
-//        }
-//
-//        @GetMapping("/all")
-//        @CrossOrigin(origins = "http://localhost:4200")
-//        public ResponseEntity<List<Comment>> getAllComments(){
-//            List<Comment> comments = commentService.findAllComments();
-//            return new ResponseEntity<>(comments, HttpStatus.OK);
-//        }
-//
-//        @GetMapping("/find/{id}")
-//        @CrossOrigin(origins = "http://localhost:4200")
-//        public ResponseEntity<List<Comment>> getProductComments(@PathVariable("id") Long productId){
-//            List<Comment> comments = commentService.getProductComments(productId);
-//            return new ResponseEntity<>(comments, HttpStatus.OK);
-//        }
-//
-//
-//    }
 }
     

@@ -1,6 +1,5 @@
 package com.market.marketplace.repositories;
 
-import com.market.marketplace.models.MyUser;
 import com.market.marketplace.models.Seller;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,4 +10,5 @@ public interface SellerRepo extends JpaRepository<Seller, Integer> {
 
     Boolean existsByUsername(String username);
     void deleteSellerById(Long id);
+    Optional<Seller> findSellerById(Long id);
 }

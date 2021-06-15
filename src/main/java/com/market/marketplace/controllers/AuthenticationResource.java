@@ -71,11 +71,12 @@ public class AuthenticationResource {
         final MyUserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 //        Setup claims
         HashMap<String, Object> claims = new HashMap<>();
+        claims.put("username",userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities());
-        claims.put("name",userDetails.getName());
-        claims.put("surname",userDetails.getSurname());
-        claims.put("email",userDetails.getEmail());
-        claims.put("phone",userDetails.getPhone());
+//        claims.put("name",userDetails.getName());
+//        claims.put("surname",userDetails.getSurname());
+//        claims.put("email",userDetails.getEmail());
+//        claims.put("phone",userDetails.getPhone());
 
         final String jwtToken = jwtTokenUtil.generateToken(userDetails,claims);
         final AuthenticationResponse response = new AuthenticationResponse(jwtToken);
@@ -116,7 +117,7 @@ public class AuthenticationResource {
 
         Set<String> strRoles = signupRequest.getRoles();
         Set<Role> roles = new HashSet<>();
-        System.out.println(strRoles);
+//        System.out.println(strRoles);
         if (strRoles == null) {
             Role userRole = roleRepo.findByName(ERole.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -147,6 +148,25 @@ public class AuthenticationResource {
         user.setRoles(roles);
         userService.addUser(user);
         return new ResponseEntity<>("User successfully created",HttpStatus.CREATED);
+    }
+
+    @PutMapping("/repassword")
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<?> resetPassword(@RequestBody ChangePasswordRequest changePasswordRequest) throws Exception {
+        try{
+//
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(changePasswordRequest.getUsername(),changePasswordRequest.getOldPassword())
+            );
+
+        }catch (BadCredentialsException e){
+            throw new Exception("Incorrect username or password!", e);
+        }
+
+        MyUser user = userService.findUserByUsername(changePasswordRequest.getUsername());
+        user.setPassword(new BCryptPasswordEncoder().encode(changePasswordRequest.getNewPassword()));
+        userService.updateUser(user);
+        return new ResponseEntity<>("Password successfully changed!", HttpStatus.OK);
     }
 
 }

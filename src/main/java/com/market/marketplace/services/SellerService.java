@@ -40,4 +40,9 @@ public class SellerService {
                 .orElseThrow(() -> new SellerNotFoundException("Seller Not Found with username: " + username));
 
     }
+
+    public Seller findSellerById(Long id){
+        return sellerRepo.findSellerById(id)
+                .orElseThrow(() -> new SellerNotFoundException("Seller Not Found with id: " + id));
+    }
 }

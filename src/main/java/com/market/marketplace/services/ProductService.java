@@ -35,4 +35,8 @@ public class ProductService {
     public void deleteProduct(Long id){
         productRepo.deleteProductById(id);
     }
+
+    public List<Product> findProductByUsername(String username){
+        return productRepo.findProductByUsername(username);
+    }
 }

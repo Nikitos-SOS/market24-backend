@@ -1,9 +1,6 @@
 package com.market.marketplace.controllers;
 
-import com.market.marketplace.models.AuthenticationRequest;
-import com.market.marketplace.models.AuthenticationResponse;
-import com.market.marketplace.models.Seller;
-import com.market.marketplace.models.SellerDetails;
+import com.market.marketplace.models.*;
 import com.market.marketplace.services.SellerDetailsService;
 import com.market.marketplace.services.SellerService;
 import com.market.marketplace.util.JwtUtil;
@@ -13,11 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
@@ -60,12 +55,29 @@ public class SellerAuthenticationResource {
 
         final SellerDetails sellerDetails = sellerDetailsService.loadUserByUsername(seller.getUsername());
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("contactInfo",sellerDetails.getContactInfo());
-        claims.put("inn", sellerDetails.getINN());
+        claims.put("username", sellerDetails.getUsername());
+//        claims.put("contactInfo",sellerDetails.getContactInfo());
+//        claims.put("inn", sellerDetails.getINN());
         claims.put("role", sellerDetails.getAuthorities());
         final String jwtToken = jwtTokenUtil.generateToken(sellerDetails,claims);
         final AuthenticationResponse response = new AuthenticationResponse(jwtToken);
         return new ResponseEntity<>(response,HttpStatus.CREATED);
 
+    }
+
+    @PutMapping("/seller_repassword")
+    public ResponseEntity<?> resetSellerPassword(@RequestBody ChangePasswordRequest changePasswordRequest) throws Exception {
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(changePasswordRequest.getUsername(),changePasswordRequest.getOldPassword())
+            );
+        }catch (BadCredentialsException e){
+            throw new Exception("Incorrect username or password!", e);
+        }
+        Seller seller = sellerService.findSellerByUsername(changePasswordRequest.getUsername());
+
+        seller.setPassword(new BCryptPasswordEncoder().encode(changePasswordRequest.getNewPassword()));
+        sellerService.updateSeller(seller);
+        return new ResponseEntity<>("Password successfully changed!", HttpStatus.OK);
     }
 }

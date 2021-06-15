@@ -1,10 +1,13 @@
 package com.market.marketplace.controllers;
 
+import com.market.marketplace.models.ChangePasswordRequest;
 import com.market.marketplace.models.Seller;
 import com.market.marketplace.services.SellerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +24,9 @@ public class SellerResource {
     @PutMapping("/update")
     @Transactional
     public ResponseEntity<?> updateSeller(@RequestBody Seller seller){
-        System.out.println(seller.getUsername()+" "+seller.getINN()+" ");
-        Seller tempSeller = sellerService.findSellerByUsername(seller.getUsername());
-        seller.setProducts(tempSeller.getProducts());
+//        System.out.println(seller.getUsername()+" "+seller.getINN()+" ");
+//        Seller tempSeller = sellerService.findSellerByUsername(seller.getUsername());
+//        seller.setProducts(tempSeller.getProducts());
         Seller updateSeller = sellerService.updateSeller(seller);
 
         return new ResponseEntity<>(updateSeller, HttpStatus.OK);
@@ -46,4 +49,6 @@ public class SellerResource {
         Seller seller = sellerService.findSellerByUsername(username);
         return new ResponseEntity<>(seller,HttpStatus.OK);
     }
+
+
 }

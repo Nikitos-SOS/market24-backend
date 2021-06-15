@@ -1,11 +1,13 @@
 package com.market.marketplace.models;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "Seller")
-public class Seller {
+public class Seller implements Serializable {
 
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
@@ -14,8 +16,24 @@ public class Seller {
     private String username;
     private String password;
     private String contactInfo;
-    @OneToMany(mappedBy = "seller")
-    private Set<Product> products;
+    private String description;
+    private String name;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -55,13 +73,5 @@ public class Seller {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(Set<Product> products) {
-        this.products = products;
     }
 }
