@@ -121,6 +121,10 @@ public class MyUserDetails implements UserDetails {
         return phone;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     @Override
     public String toString() {
         return "MyUserDetails{" +

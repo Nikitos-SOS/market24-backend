@@ -71,6 +71,7 @@ public class AuthenticationResource {
         final MyUserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 //        Setup claims
         HashMap<String, Object> claims = new HashMap<>();
+        claims.put("id", userDetails.getId());
         claims.put("username",userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities());
 //        claims.put("name",userDetails.getName());

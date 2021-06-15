@@ -9,7 +9,12 @@ public class Comment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, updatable = false)
     private Long id;
-    private Long userID;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    private  MyUser user;
+
+
     private Long productID;
     private String text;
     private float rate;
@@ -18,7 +23,7 @@ public class Comment implements Serializable {
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", userID=" + userID +
+                ", user=" + user +
                 ", productID=" + productID +
                 ", text='" + text + '\'' +
                 ", rate=" + rate +
@@ -33,12 +38,12 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Long getUserID() {
-        return userID;
+    public MyUser getUser() {
+        return user;
     }
 
-    public void setUserID(Long userID) {
-        this.userID = userID;
+    public void setUser(MyUser user) {
+        this.user = user;
     }
 
     public Long getProductID() {

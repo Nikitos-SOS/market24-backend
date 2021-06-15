@@ -1,5 +1,6 @@
 package com.market.marketplace.services;
 
+import com.market.marketplace.exceptions.CommentNotFoundException;
 import com.market.marketplace.models.Comment;
 import com.market.marketplace.repositories.CommentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,12 +35,12 @@ public class CommentService {
     }
 
     public List<Comment> getProductComments(Long productId){
-        List<Comment> comments = commentRepo.findAll();
-        List<Comment> resultComments = new LinkedList<>();
-        for (Comment comment : comments){
-            if(productId.equals(comment.getProductID()))
-                resultComments.add(comment);
-        }
-        return resultComments;
+       return commentRepo.findCommentsByProductId(productId)
+               .orElseThrow(()->new CommentNotFoundException("There are no comments for "+productId+" product"));
+    }
+
+    public Comment findCommentById(Long id){
+        return commentRepo.findCommentById(id)
+                .orElseThrow(()->new CommentNotFoundException("Comment not found with id: "+id));
     }
 }

@@ -1,12 +1,14 @@
 package com.market.marketplace.controllers;
 
 import com.market.marketplace.models.Comment;
+import com.market.marketplace.models.CommentRequest;
 import com.market.marketplace.models.Product;
 import com.market.marketplace.models.ProductRequest;
 import com.market.marketplace.repositories.SellerRepo;
 import com.market.marketplace.services.CommentService;
 import com.market.marketplace.services.ProductService;
 import com.market.marketplace.services.SellerService;
+import com.market.marketplace.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ public class ProductResource {
 
     @Autowired
     private SellerService sellerService;
+
+    @Autowired
+    private UserService userService;
 
 
     public ProductResource(ProductService productService, CommentService commentService) {
@@ -127,17 +132,31 @@ public class ProductResource {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
+
+    @Transactional
     @PostMapping("/comment/add")
     @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<Comment> addComment(@RequestBody Comment comment){
-        Comment newComment = commentService.addComment(comment);
-        return new ResponseEntity<>(newComment, HttpStatus.CREATED);
+    public ResponseEntity<Comment> addComment(@RequestBody CommentRequest comment){
+        Comment newComment = new Comment();
+        newComment.setId(comment.getId());
+        newComment.setProductID(comment.getProductID());
+        newComment.setUser(userService.findUserById(comment.getUserID()));
+        newComment.setText(comment.getText());
+        newComment.setRate(comment.getRate());
+        Product product = productService.findProductById(comment.getProductID());
+        product.setRating((product.getRating() + comment.getRate())/2);
+        productService.updateProduct(product);
+//        Comment newComment = commentService.addComment(comment);
+        return new ResponseEntity<>(commentService.addComment(newComment), HttpStatus.CREATED);
     }
 
     @Transactional
     @DeleteMapping("/comment/delete/{id}")
     @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<?> deleteComment(@PathVariable("id") Long id){
+        Comment comment = commentService.findCommentById(id);
+        Product product = productService.findProductById(comment.getProductID());
+        product.setRating(product.getRating() * 2 -comment.getRate());
         commentService.deleteComment(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
