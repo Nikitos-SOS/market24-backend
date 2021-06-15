@@ -1,32 +1,29 @@
 package com.market.marketplace.models;
 
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
-
-@Entity
-public class Product implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false,updatable = false)
-    private long id;
+public class ProductRequest {
+    private Long id;
     private String name;
     private float price;
     private int count;
     private String imgUrl;
     private String description;
     private float rating;
-
+    private Long seller;
     private String city;
     private String region;
 
-
-    @ManyToOne
-    @JoinColumn(name = "seller_id", referencedColumnName = "id",nullable = false)
-    private Seller seller;
-
+    public ProductRequest(Long id, String name, float price, int count, String imgUrl, String description, float rating, Long seller, String city, String region) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.count = count;
+        this.imgUrl = imgUrl;
+        this.description = description;
+        this.rating = rating;
+        this.seller = seller;
+        this.city = city;
+        this.region = region;
+    }
 
     public String getCity() {
         return city;
@@ -44,29 +41,14 @@ public class Product implements Serializable {
         this.region = region;
     }
 
-    public Seller getSeller() {
-        return seller;
+    public ProductRequest() {
     }
 
-    public void setSeller(Seller seller) {
-        this.seller = seller;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public Product() {
-    }
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -110,16 +92,19 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", count=" + count +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", description='" + description + '\'' +
-                ", rating=" + rating +
-                '}';
+    public float getRating() {
+        return rating;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public Long getSeller() {
+        return seller;
+    }
+
+    public void setSeller(Long seller) {
+        this.seller = seller;
     }
 }

@@ -5,16 +5,16 @@ import java.util.Set;
 public class SignupRequest {
 
     private String userName;
-    private Set<String> role;
+    private Set<String> roles;
     private String password;
     private String name;
     private String surname;
     private String email;
     private String phone;
 
-    public SignupRequest(String userName, Set<String> role, String password, String name, String surname, String email, String phone) {
+    public SignupRequest(String userName, Set<String> roles, String password, String name, String surname, String email, String phone) {
         this.userName = userName;
-        this.role = role;
+        this.roles = roles;
         this.password = password;
         this.name = name;
         this.surname = surname;
@@ -43,12 +43,12 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public Set<String> getRole() {
-        return this.role;
+    public Set<String> getRoles() {
+        return this.roles;
     }
 
-    public void setRole(Set<String> role) {
-        this.role = role;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
     public String getName() {
